@@ -1,0 +1,37 @@
+name: CI and Release
+
+on:
+  push:
+    tags:
+      - 'v[0-9]+.*' # Triggers the workflow when pushing a tag that starts with 'v'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Check out the repository
+      - uses: actions/checkout@v4
+
+      # Run tests or build steps (optional, based on your project requirements)
+      - name: Run Tests
+        run: echo "Running tests..."
+      
+      # Create a release using the release-description.txt content
+      - name: Create Release
+        id: create_release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: |
+            release-description.txt # Optionally attach the file itself as an asset
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # Required to authenticate the release
+
+      # Upload the release description to the GitHub release
+      - name: Add Release Description
+        if: success() # Ensure the release was created successfully
+        run: |
+          gh release view ${{ github.ref_name }} --json url -q ".url"
+          gh release edit ${{ github.ref_name }} --notes-file release-description.txt
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
