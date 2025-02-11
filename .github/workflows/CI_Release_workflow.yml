@@ -19,8 +19,7 @@ jobs:
       - name: Read Release Description
         id: read_release_description
         run: |
-          RELEASE_NOTES=$(cat release-description.txt)
-          echo "release_notes=$RELEASE_NOTES"
+          echo "::set-output name=release_notes::$(cat release-description.txt)"
 
       # Create a release using the release-description.txt content
       - name: Create Release
