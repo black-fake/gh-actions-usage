@@ -27,8 +27,11 @@ jobs:
         id: create_release
         uses: actions/create-release@v1
         with:
-          files: |
-            release-description.txt
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ github.ref_name }}
+          prerelease: 'false'
+          draft: 'false'
+          body: ${{ env.release_notes }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # Required to authenticate the release
 
