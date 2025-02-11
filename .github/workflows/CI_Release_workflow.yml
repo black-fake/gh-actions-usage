@@ -15,6 +15,13 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      # Read contents of release-description.txt
+      - name: Read Release Description
+        id: read_release_description
+        run: |
+          RELEASE_NOTES=$(cat release-description.txt)
+          echo "release_notes=$RELEASE_NOTES" >> $GITHUB_ENV
+
       # Create a release using the release-description.txt content
       - name: Create Release
         id: create_release
