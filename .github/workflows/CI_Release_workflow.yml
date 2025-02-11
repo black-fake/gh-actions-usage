@@ -20,7 +20,7 @@ jobs:
         id: read_release_description
         run: |
           RELEASE_NOTES=$(cat release-description.txt)
-          echo "release_notes=$RELEASE_NOTES" >> $GITHUB_ENV
+          echo "release_notes=$RELEASE_NOTES"
 
       # Create a release using the release-description.txt content
       - name: Create Release
