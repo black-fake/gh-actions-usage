@@ -31,7 +31,12 @@ jobs:
           release_name: Release ${{ github.ref_name }}
           prerelease: 'false'
           draft: 'false'
-          body: ${{ env.release_notes }}
+          body: |
+            Changes in this Release:
+            - First Change
+            - Second Change
+
+        #          body: ${{ env.release_notes }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # Required to authenticate the release
 
