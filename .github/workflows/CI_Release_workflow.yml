@@ -31,7 +31,7 @@ jobs:
       # Create a release using the release-description.txt content
       - name: Create Release
         id: create_release
-        uses: actions/create-release@v1
+        uses: actions/create-release@v1.1.4
         with:
           tag_name: ${{ github.ref }}
           release_name: Release ${{ github.ref_name }}
