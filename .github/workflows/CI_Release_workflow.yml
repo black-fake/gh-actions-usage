@@ -21,7 +21,7 @@ jobs:
         run: |
           echo "::set-output name=release_notes::$(cat release-description.txt)"
 
-      # Check the github output
+      # Check the GitHub output
       - name: Use Release Notes
         run: echo "${{ steps.read_release_description.outputs.release_notes }}"
 
