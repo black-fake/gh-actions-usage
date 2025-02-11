@@ -11,18 +11,8 @@ jobs:
 
     steps:
       # Check out the repository
-      - uses: actions/checkout@v4
-
-      # Run tests or build steps (optional, based on your project requirements)
-      - name: Run Tests
-        run: echo "Running tests..."
-        
-      - name: Check if GITHUB_TOKEN is working and output length
-        run: |
-          echo "Token exists!"
-          echo "Token length: ${#GITHUB_TOKEN}"
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Checkout code
+        uses: actions/checkout@v4
 
       # Create a release using the release-description.txt content
       - name: Create Release
