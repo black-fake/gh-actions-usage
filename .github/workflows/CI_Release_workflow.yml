@@ -19,11 +19,14 @@ jobs:
       - name: Read Release Description
         id: read_release_description
         run: |
-          echo "::set-output name=release_notes::$(cat release-description.txt)"
+          RELEASE_NOTES=$(cat release-description.txt)
+          echo "RELEASE_NOTES<<EOF" >> $GITHUB_ENV
+          echo "$RELEASE_NOTES" >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
 
       # Check the GitHub output
       - name: Use Release Notes
-        run: echo "${{ steps.read_release_description.outputs.release_notes }}"
+        run: echo "${RELEASE_NOTES}"
 
       # Create a release using the release-description.txt content
       - name: Create Release
@@ -34,10 +37,7 @@ jobs:
           release_name: Release ${{ github.ref_name }}
           prerelease: 'false'
           draft: 'false'
-          body: |
-            Changes in this Release:
-            - First Change
-            - Second Change
+          body: "${{ env.RELEASE_NOTES }}"
 
         #          body: ${{ env.release_notes }}
         env:
