@@ -22,7 +22,7 @@ jobs:
       - name: Generate Release Notes for automatic creation
         id: generate_auto_release_notes
         run: |
-          AUTO_RELEASE_NOTES=$(gh api repos/${{ github.repository }}/releases/generate-notes -f tag_name=${{ github.ref_name }} body -q ".body")
+          AUTO_RELEASE_NOTES=$(gh api repos/${{ github.repository }}/releases/generate-notes -f tag_name=${{ github.ref_name }} -q ".body")
           echo "AUTO_RELEASE_NOTES<<EOF" >> $GITHUB_ENV
           echo "$AUTO_RELEASE_NOTES" >> $GITHUB_ENV
           echo "EOF" >> $GITHUB_ENV
