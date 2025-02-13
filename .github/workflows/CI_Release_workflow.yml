@@ -51,7 +51,7 @@ jobs:
           release_name: Release ${{ github.ref_name }}
           prerelease: 'false'
           draft: 'false'
-          body: "This is a test body with manual release notes:\n\n${{ env.RELEASE_NOTES }}\n\n Auto-release notes:\n\n${{ env.AUTO_RELEASE_NOTES }}"
+          body: ${{ env.AUTO_RELEASE_NOTES}}
 
 
         #          body: ${{ env.release_notes }}
