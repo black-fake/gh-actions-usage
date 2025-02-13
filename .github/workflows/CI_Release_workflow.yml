@@ -22,7 +22,7 @@ jobs:
       - name: Generate Release Notes for automatic creation
         id: generate_auto_release_notes
         run: |
-          gh release create ${{ github.ref_name }} --generate-notes --draft
+          gh release create ${{ github.ref_name }} --generate-notes
           AUTO_RELEASE_NOTES=$(gh release view ${{ github.ref_name }} --json body -q ".body")
           echo "AUTO_RELEASE_NOTES<<EOF" >> $GITHUB_ENV
           echo "$AUTO_RELEASE_NOTES" >> $GITHUB_ENV
