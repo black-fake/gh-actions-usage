@@ -1,9 +1,10 @@
-## Version 0.9.1 - Pre-Release
-**Release Date:** 2024-02-10
+## Version 0.10.0 - Pre-Release
+**Release Date:** 2024-02-13
 
 ### Updates:
-- This version focuses on testing the GitHub Actions workflow for creating automated releases.
+- This version focuses on generating the release notes automatically based on commits and pull requests.
 
 ### Next Steps:
-- Refine the CI/CD pipeline to improve tagging, building, and releasing new versions automatically based on repository changes.
-- Gather and implement feedback from this testing phase to prepare for the full release.
+- create a workflow for creating a release automatically when changes in main are detected
+- test workflow with cron job -> create the release at end of day
+- create a tag automatically for the release
