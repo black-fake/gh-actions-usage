@@ -18,6 +18,18 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      # generate auto-release-notes
+      - name: Generate Release Notes for automatic creation
+        id: generate_auto_release_notes
+        run: |
+          gh release create ${{ github.ref_name }} --generate-notes --draft
+          AUTO_RELEASE_NOTES=$(gh release view ${{ github.ref_name }} --json body -q ".body")
+          echo "AUTO_RELEASE_NOTES<<EOF" >> $GITHUB_ENV
+          echo "$AUTO_RELEASE_NOTES" >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
       # Read contents of release-description.txt
       - name: Read Release Description
         id: read_release_description
