@@ -51,7 +51,7 @@ jobs:
           release_name: Release ${{ github.ref_name }}
           prerelease: 'false'
           draft: 'false'
-          body: ${{ env.AUTO_RELEASE_NOTES}}
+          body: ${{ AUTO_RELEASE_NOTES }}
 
 
         #          body: ${{ env.release_notes }}
