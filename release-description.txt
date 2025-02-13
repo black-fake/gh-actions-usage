@@ -1,4 +1,4 @@
-## Version 0.10.4 - Pre-Release
+## Version 0.10.5 - Pre-Release
 **Release Date:** 2024-02-13
 
 ### Updates:
