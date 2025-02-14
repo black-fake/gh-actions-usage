@@ -47,19 +47,21 @@ jobs:
         id: determine_bump
         run: |
           PRS="${{ env.PRS }}"
-          echo "Analyzing PR Titles for Bumps: $PRS"
+          echo "Analyzing PR Titles for Bumps: ${{ env.PRS }}"
 
           # Initialize default bump type as patch
           # BUMP_TYPE="patch"
 
+          set -x
           # Check for #major, #minor, or #patch in PR titles and determine the highest bump
-          if echo "$PRS" | grep -q "#major"; then
+          if echo "${{ env.PRS }}" | grep -q "#major"; then
             BUMP_TYPE="major"
-          elif echo "$PRS" | grep -q "#minor"; then
+          elif echo "${{ env.PRS }}" | grep -q "#minor"; then
             BUMP_TYPE="minor"
           else
             BUMP_TYPE="patch"
           fi
+          set +x
 
           echo "Determined Bump Type: $BUMP_TYPE"
           echo "INPUT_BUMP=$BUMP_TYPE" >> $GITHUB_ENV
