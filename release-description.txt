@@ -1,8 +1,8 @@
-## Version 1.1.0 - Pre-Release
+## Version 1.2.0 - Pre-Release
 **Release Date:** 2024-02-14
 
 ### Updates:
-- This version focuses on generating the release notes automatically based on changes on the main branch.
+- This version focuses on generating the tag correctly based on the previous tag and the pull request markings (#major, #minor, #patch).
 
 ### Next Steps:
 - create a workflow for creating a release automatically when changes in main are detected
