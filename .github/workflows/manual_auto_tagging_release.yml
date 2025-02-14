@@ -50,7 +50,7 @@ jobs:
           echo "Analyzing PR Titles for Bumps: $PRS"
 
           # Initialize default bump type as patch
-          BUMP_TYPE="patch"
+          # BUMP_TYPE="patch"
 
           # Check for #major, #minor, or #patch in PR titles and determine the highest bump
           if echo "$PRS" | grep -q "#major"; then
@@ -71,6 +71,13 @@ jobs:
           LATEST_TAG=${LATEST_TAG:-"v0.0.0"}
           BASE_VERSION="${LATEST_TAG#v}"
           IFS='.' read -r MAJOR MINOR PATCH <<< "$BASE_VERSION"
+
+          if [ -z "$MINOR" ]; then
+            MINOR=0
+          fi
+          if [-z "$PATCH" ]; then
+            PATCH=0
+          fi
 
           if [ "$INPUT_BUMP" = "major" ]; then
             MAJOR=$((MAJOR + 1))
