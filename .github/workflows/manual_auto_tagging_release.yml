@@ -41,6 +41,7 @@ jobs:
           RELEASE_DATE=$(git log -1 --format=%ai ${LATEST_TAG})
           echo "Release date: $RELEASE_DATE"
           
+          # built-in variables
           echo "REPO: $GITHUB_REPOSITORY"
           echo "SHA: $GITHUB_SHA"
 
