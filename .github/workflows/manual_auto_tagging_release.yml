@@ -41,7 +41,8 @@ jobs:
 
           # Use the GitHub CLI to fetch merged PRs since the latest tag
           set -x
-          PRS=$(gh pr list --repo $GITHUB_REPOSITORY --state merged --search "merged:>${RELEASE_DATE}" --json title --jq '.[].title')
+          # PRS=$(gh pr list --repo $GITHUB_REPOSITORY --state merged --search "merged:>${RELEASE_DATE}" --json title --jq '.[].title')
+          PRS=$(gh api -H "Authorization: Bearer $GH_TOKEN"  /repos/$REPO/commits/$COMMIT/pulls --jq '.[].title')
           echo "Merged PRs: $PRS"
           echo "PRS<<EOF" >> $GITHUB_ENV
           echo "$PRS" >> $GITHUB_ENV
