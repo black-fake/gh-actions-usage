@@ -44,7 +44,7 @@ jobs:
       - name: Use Release Notes
         run: echo "${AUTO_RELEASE_NOTES}";echo "${RELEASE_NOTES}"
 
-      # Create a release using the release-description.txt content
+      # Create a release using previous read/created content
       - name: Create Release
         id: create_release
         uses: actions/create-release@v1.1.4
