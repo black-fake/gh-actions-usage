@@ -57,11 +57,12 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # Required to authenticate the release
 
-      # Upload the release description to the GitHub release
-      - name: Add Release Description
-        if: success() # Ensure the release was created successfully
-        run: |
-          gh release view ${{ github.ref_name }} --json url -q ".url"
-          gh release edit ${{ github.ref_name }} --notes-file release-description.txt
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+# TODO: for later use: `gh release edit ...` part
+#      # Upload the release description to the GitHub release
+#      - name: Add Release Description
+#        if: success() # Ensure the release was created successfully
+#        run: |
+#          gh release view ${{ github.ref_name }} --json url -q ".url"
+#          gh release edit ${{ github.ref_name }} --notes-file release-description.txt
+#        env:
+#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
