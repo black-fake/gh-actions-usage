@@ -110,7 +110,6 @@ jobs:
 
       # Step 6: Create Release
       - name: Create Release
-        if: env.RELEASE_NEEDED == 'true'
         uses: actions/create-release@v1.1.4
         with:
           tag_name: ${{ steps.determine_next_version.outputs.new_version }}
