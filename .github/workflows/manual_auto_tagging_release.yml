@@ -40,6 +40,9 @@ jobs:
           # Get the date of the latest release
           RELEASE_DATE=$(git log -1 --format=%ai ${LATEST_TAG})
           echo "Release date: $RELEASE_DATE"
+          
+          echo "REPO: $GITHUB_REPOSITORY"
+          echo "SHA: $GITHUB_SHA"
 
           # Use the GitHub CLI to fetch merged PRs since the latest tag
           set -x
