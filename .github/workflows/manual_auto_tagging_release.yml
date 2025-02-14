@@ -44,6 +44,18 @@ jobs:
           echo "EOF" >> $GITHUB_ENV
           set -x
 
+      - name: Get Associated PRs
+        uses: austenstone/list-prs-associated-with-a-commit@v1
+
+      - name: print number of first PR in list
+        run: echo "${{ fromJson(steps.get-pr.outputs.prs)[0].number }}\n\n${{ fromJson(steps.get-pr.outputs.pr-numbers)[0] }}"
+
+      - name: print output of pr_gathering
+        run: |
+          echo "${{ steps.get-pr.outputs.prs }}"
+          echo "================================"
+          echo "${{ steps.get-pr.outputs.pr-numbers }}"
+
       # Step 4: Determine the highest bump type from PR titles
       - name: Determine Bump from PR Titles
         id: determine_bump
