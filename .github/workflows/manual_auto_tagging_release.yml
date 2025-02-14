@@ -52,6 +52,7 @@ jobs:
           # Initialize default bump type as patch
           # BUMP_TYPE="patch"
 
+          set -x
           # Check for #major, #minor, or #patch in PR titles and determine the highest bump
           if echo "${{ env.PRS }}" | grep -q "#major"; then
             BUMP_TYPE="major"
@@ -60,6 +61,7 @@ jobs:
           else
             BUMP_TYPE="patch"
           fi
+          set +x
 
           echo "Determined Bump Type: $BUMP_TYPE"
           echo "INPUT_BUMP=$BUMP_TYPE" >> $GITHUB_ENV
