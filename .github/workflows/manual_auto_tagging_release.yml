@@ -50,7 +50,7 @@ jobs:
           echo "Analyzing PR Titles for Bumps: $PRS"
 
           # Initialize default bump type as patch
-          BUMP_TYPE="patch"
+          # BUMP_TYPE="patch"
 
           # Check for #major, #minor, or #patch in PR titles and determine the highest bump
           if echo "$PRS" | grep -q "#major"; then
