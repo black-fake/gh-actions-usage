@@ -17,6 +17,8 @@ jobs:
       # Check out the repository
       - name: Checkout code
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       # generate auto-release-notes
       - name: Generate Release Notes for automatic creation
@@ -52,9 +54,6 @@ jobs:
           prerelease: 'false'
           draft: 'false'
           body: ${{ env.AUTO_RELEASE_NOTES }}
-
-
-        #          body: ${{ env.release_notes }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # Required to authenticate the release
 
