@@ -1,5 +1,5 @@
-## Version 0.10.7 - Pre-Release
-**Release Date:** 2024-02-13
+## Version 0.10.8 - Pre-Release
+**Release Date:** 2024-02-14
 
 ### Updates:
 - This version focuses on generating the release notes automatically based on commits and pull requests.
