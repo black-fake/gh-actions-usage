@@ -41,30 +41,18 @@ jobs:
           RELEASE_DATE=$(git log -1 --format=%ai ${LATEST_TAG})
           echo "Release date: $RELEASE_DATE"
           
+          # built-in variables
           echo "REPO: $GITHUB_REPOSITORY"
           echo "SHA: $GITHUB_SHA"
 
           # Use the GitHub CLI to fetch merged PRs since the latest tag
           set -x
-          # PRS=$(gh pr list --repo $GITHUB_REPOSITORY --state merged --search "merged:>${RELEASE_DATE}" --json title --jq '.[].title')
           PRS=$(gh api -H "Authorization: Bearer $GITHUB_TOKEN"  /repos/$REPO/commits/$COMMIT/pulls --jq '.[].title')
           echo "Merged PRs: $PRS"
           echo "PRS<<EOF" >> $GITHUB_ENV
           echo "$PRS" >> $GITHUB_ENV
           echo "EOF" >> $GITHUB_ENV
           set -x
-
-#      - name: Get Associated PRs
-#        uses: austenstone/list-prs-associated-with-a-commit@v1
-#
-#      - name: print number of first PR in list
-#        run: echo "${{ fromJson(steps.get-pr.outputs.prs)[0].number }}\n\n${{ fromJson(steps.get-pr.outputs.pr-numbers)[0] }}"
-#
-#      - name: print output of pr_gathering
-#        run: |
-#          echo "${{ steps.get-pr.outputs.prs }}"
-#          echo "================================"
-#          echo "${{ steps.get-pr.outputs.pr-numbers }}"
 
       # Step 4: Determine the highest bump type from PR titles
       - name: Determine Bump from PR Titles
@@ -122,7 +110,6 @@ jobs:
 
       # Step 6: Create Release
       - name: Create Release
-        if: env.RELEASE_NEEDED == 'true'
         uses: actions/create-release@v1.1.4
         with:
           tag_name: ${{ steps.determine_next_version.outputs.new_version }}
