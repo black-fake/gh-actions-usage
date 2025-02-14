@@ -1,0 +1,101 @@
+name: Manual Auto Tagging Release
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  check-and-release:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1: Checkout repository
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      # Step 2: Get the latest release tag
+      - name: Get Latest Release Tag
+        id: get_latest_release
+        run: |
+          LATEST_TAG=$(git describe --tags `git rev-list --tags --max-count=1` || echo "v0.0.0")
+          echo "LATEST_TAG=${LATEST_TAG}" >> $GITHUB_ENV
+          echo "LATEST_TAG=${LATEST_TAG}"
+
+      # Step 3: Fetch pull requests merged since the last release
+      - name: Get Pull Requests Since Last Release
+        id: get_prs
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          # Get the date of the latest release
+          RELEASE_DATE=$(git log -1 --format=%ai ${LATEST_TAG} | awk '{print $1}')
+          echo "Release date: $RELEASE_DATE"
+
+          # Use the GitHub CLI to fetch merged PRs since the latest tag
+          PRS=$(gh pr list --repo $GITHUB_REPOSITORY --state merged --search "merged:>${RELEASE_DATE}" --json title --jq '.[].title')
+          echo "Merged PRs: $PRS"
+          echo "PRS<<EOF" >> $GITHUB_ENV
+          echo "$PRS" >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
+
+      # Step 4: Determine the highest bump type from PR titles
+      - name: Determine Bump from PR Titles
+        id: determine_bump
+        run: |
+          PRS="${{ env.PRS }}"
+          echo "Analyzing PR Titles for Bumps: $PRS"
+
+          # Initialize default bump type as patch
+          BUMP_TYPE="patch"
+
+          # Check for #major, #minor, or #patch in PR titles and determine the highest bump
+          if echo "$PRS" | grep -q "#major"; then
+            BUMP_TYPE="major"
+          elif echo "$PRS" | grep -q "#minor"; then
+            BUMP_TYPE="minor"
+          else
+            BUMP_TYPE="patch"
+          fi
+
+          echo "Determined Bump Type: $BUMP_TYPE"
+          echo "INPUT_BUMP=$BUMP_TYPE" >> $GITHUB_ENV
+
+      # Step 5: Determine next semantic version
+      - name: Calculate Next Semantic Version
+        id: determine_next_version
+        run: |
+          LATEST_TAG=${LATEST_TAG:-"v0.0.0"}
+          BASE_VERSION="${LATEST_TAG#v}"
+          IFS='.' read -r MAJOR MINOR PATCH <<< "$BASE_VERSION"
+
+          if [ "$INPUT_BUMP" = "major" ]; then
+            MAJOR=$((MAJOR + 1))
+            MINOR=0
+            PATCH=0
+          elif [ "$INPUT_BUMP" = "minor" ]; then
+            MINOR=$((MINOR + 1))
+            PATCH=0
+          else
+            PATCH=$((PATCH + 1))
+          fi
+
+          NEW_VERSION="v${MAJOR}.${MINOR}.${PATCH}"
+          echo "New Version: $NEW_VERSION"
+          echo "new_version=${NEW_VERSION}" >> $GITHUB_OUTPUT
+
+      # Step 6: Create Release
+      - name: Create Release
+        if: env.RELEASE_NEEDED == 'true'
+        uses: actions/create-release@v1.1.4
+        with:
+          tag_name: ${{ steps.determine_next_version.outputs.new_version }}
+          release_name: Release v${{ steps.determine_next_version.outputs.new_version }}
+          body: |
+            this release concentrates on the creation of the correct semantic tag
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
