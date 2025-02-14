@@ -53,7 +53,7 @@ jobs:
           release_name: Release ${{ github.ref_name }}
           prerelease: 'false'
           draft: 'false'
-          body: "${{ env.RELEASE_NOTES }}\n\n${{ env.AUTO_RELEASE_NOTES }}"
+          body: "${{ env.AUTO_RELEASE_NOTES }}\n\n${{ env.RELEASE_NOTES }}"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # Required to authenticate the release
 
