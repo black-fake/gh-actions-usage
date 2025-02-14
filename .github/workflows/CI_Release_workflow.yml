@@ -1,0 +1,68 @@
+name: CI and Release
+
+permissions:
+  contents: write
+
+on:
+  push:
+    tags:
+      - 'v[0-9]+.*' # Triggers the workflow when pushing a tag that starts with 'v'
+
+jobs:
+  build:
+    name: Create Release
+    runs-on: ubuntu-latest
+
+    steps:
+      # Check out the repository
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      # generate auto-release-notes
+      - name: Generate Release Notes for automatic creation
+        id: generate_auto_release_notes
+        run: |
+          AUTO_RELEASE_NOTES=$(gh api repos/${{ github.repository }}/releases/generate-notes -f tag_name=${{ github.ref_name }} -q ".body")
+          echo "AUTO_RELEASE_NOTES<<EOF" >> $GITHUB_ENV
+          echo "$AUTO_RELEASE_NOTES" >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      # Read contents of release-description.txt
+      - name: Read Release Description
+        id: read_release_description
+        run: |
+          RELEASE_NOTES=$(cat release-description.txt)
+          echo "RELEASE_NOTES<<EOF" >> $GITHUB_ENV
+          echo "$RELEASE_NOTES" >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
+
+      # Check the GitHub output
+      - name: Use Release Notes
+        run: echo "${AUTO_RELEASE_NOTES}";echo "${RELEASE_NOTES}"
+
+      # Create a release using previous read/created content
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1.1.4
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ github.ref_name }}
+          prerelease: 'false'
+          draft: 'false'
+          body: "${{ env.RELEASE_NOTES }}\n\n${{ env.AUTO_RELEASE_NOTES }}"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # Required to authenticate the release
+
+# TODO: for later use: `gh release edit ...` part
+#      # Upload the release description to the GitHub release
+#      - name: Add Release Description
+#        if: success() # Ensure the release was created successfully
+#        run: |
+#          gh release view ${{ github.ref_name }} --json url -q ".url"
+#          gh release edit ${{ github.ref_name }} --notes-file release-description.txt
+#        env:
+#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

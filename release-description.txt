@@ -1,0 +1,10 @@
+## Version 0.11.1 - Pre-Release
+**Release Date:** 2024-02-14
+
+### Updates:
+- This version focuses on generating the release notes automatically based on commits and pull requests.
+
+### Next Steps:
+- create a workflow for creating a release automatically when changes in main are detected
+- test workflow with cron job -> create the release at end of day
+- create a tag automatically for the release
