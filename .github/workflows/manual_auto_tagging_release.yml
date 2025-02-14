@@ -34,6 +34,8 @@ jobs:
         id: get_prs
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO: ${{ github.repository }}
+          COMMIT: ${{ github.sha }}
         run: |
           # Get the date of the latest release
           RELEASE_DATE=$(git log -1 --format=%ai ${LATEST_TAG})
