@@ -72,6 +72,13 @@ jobs:
           BASE_VERSION="${LATEST_TAG#v}"
           IFS='.' read -r MAJOR MINOR PATCH <<< "$BASE_VERSION"
 
+          if [ -z "$MINOR" ]; then
+            MINOR=0
+          fi
+          if [-z "$PATCH" ]; then
+            PATCH=0
+          fi
+
           if [ "$INPUT_BUMP" = "major" ]; then
             MAJOR=$((MAJOR + 1))
             MINOR=0
