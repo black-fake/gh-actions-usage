@@ -1,8 +1,8 @@
-## Version 0.11.1 - Pre-Release
+## Version 0.13.1 - Pre-Release
 **Release Date:** 2024-02-14
 
 ### Updates:
-- This version focuses on generating the release notes automatically based on commits and pull requests.
+- This version focuses on generating the release notes automatically based on changes on the main branch.
 
 ### Next Steps:
 - create a workflow for creating a release automatically when changes in main are detected
