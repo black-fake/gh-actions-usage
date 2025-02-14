@@ -31,14 +31,14 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-#      # Read contents of release-description.txt
-#      - name: Read Release Description
-#        id: read_release_description
-#        run: |
-#          RELEASE_NOTES=$(cat release-description.txt)
-#          echo "RELEASE_NOTES<<EOF" >> $GITHUB_ENV
-#          echo "$RELEASE_NOTES" >> $GITHUB_ENV
-#          echo "EOF" >> $GITHUB_ENV
+      # Read contents of release-description.txt
+      - name: Read Release Description
+        id: read_release_description
+        run: |
+          RELEASE_NOTES=$(cat release-description.txt)
+          echo "RELEASE_NOTES<<EOF" >> $GITHUB_ENV
+          echo "$RELEASE_NOTES" >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
 
       # Check the GitHub output
       - name: Use Release Notes
