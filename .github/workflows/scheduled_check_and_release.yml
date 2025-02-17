@@ -92,11 +92,11 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      # Step 5: Read contents of release-description.txt
+      # Step 5: Read contents of additional-release-notes.txt
       - name: Read Release Description
         id: read_release_description
         run: |
-          RELEASE_NOTES=$(cat release-description.txt)
+          RELEASE_NOTES=$(cat additional-release-notes.txt)
           echo "RELEASE_NOTES<<EOF" >> $GITHUB_ENV
           echo "$RELEASE_NOTES" >> $GITHUB_ENV
           echo "EOF" >> $GITHUB_ENV
