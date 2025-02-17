@@ -48,7 +48,7 @@ jobs:
           fi
 
           # Fetch the origin/main branch to ensure it's in sync
-          git fetch origin main
+          git fetch --tags origin main
 
           # Compare the repository since the latest tag to HEAD on the main branch
           CHANGED_FILES=$(git diff $LATEST_TAG..origin/main --name-only)
