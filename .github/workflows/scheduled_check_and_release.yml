@@ -4,7 +4,7 @@ on:
   schedule:
     # Run the workflow every 5 minutes
     - cron: '*/5 * * * *'
-  workflow_dispatch: 
+  workflow_dispatch:
 
 permissions:
   contents: write  # Required to interact with the repository
@@ -108,7 +108,7 @@ jobs:
         uses: actions/create-release@v1.1.4
         with:
           tag_name: ${{ env.LATEST_TAG }} # Incremental release tag
-          release_name: ${{ env.LATEST_TAG }}
+          release_name: Release ${{ env.LATEST_TAG }}
           body: |
             "${{ env.AUTO_RELEASE_NOTES }}\n\n${{ env.RELEASE_NOTES }}"
           prerelease: false
