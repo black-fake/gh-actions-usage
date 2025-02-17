@@ -21,12 +21,10 @@ jobs:
           fetch-depth: 0
 
       # Step 2: Get the latest release tag
-      - name: Get Latest Release Tag
+      - name: Get Latest Tag for creating new Release
         id: get_latest_release
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          LATEST_TAG=$(gh release list --limit 1 --json tagName --jq '.[0].tagName'  || echo "v0.0.0")
+          LATEST_TAG=$(git describe --tags --abbrev=0  || echo "v0.0.0")
           echo "LATEST_TAG=${LATEST_TAG}" >> $GITHUB_ENV
           echo "LATEST_TAG=${LATEST_TAG}"
 
