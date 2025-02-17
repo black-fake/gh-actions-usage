@@ -112,7 +112,9 @@ jobs:
           tag_name: ${{ env.LATEST_TAG }} # Incremental release tag
           release_name: Release ${{ env.LATEST_TAG }}
           body: |
-            "${{ env.AUTO_RELEASE_NOTES }}\n\n${{ env.RELEASE_NOTES }}"
+            ${{ env.AUTO_RELEASE_NOTES }}
+
+            ${{ env.RELEASE_NOTES }}
           prerelease: false
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
