@@ -104,9 +104,11 @@ jobs:
           elif [ "$INPUT_BUMP" = "patch" ]; then
             PATCH=$((PATCH + 1))
           elif [ "$INPUT_BUMP" = "fist_bump_in_the_face" ]; then
+            echo
             echo "👊 You're getting a virtual punch in the face! Why?" >&2
             echo "Because you didn't use proper tags like #major, #minor, or #patch in your Pull Request titles." >&2
             echo "Fix your PR tags and try again!" >&2
+            echo
             exit 42
           else
             echo "💥 Unexpected error: Invalid bump type '$INPUT_BUMP'." >&2
