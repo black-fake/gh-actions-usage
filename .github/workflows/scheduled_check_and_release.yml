@@ -37,7 +37,25 @@ jobs:
             echo "PREVIOUS_RELEASE_EXISTS=true" >> $GITHUB_ENV
           fi
 
-      # Step 3: Check if there are changes since the latest release tag
+      # Step 3: Get the latest (non-release) tag
+      - name: Get latest tag
+        id: get_latest_tag
+        run: |
+          # Fetch the origin/main branch with its tags
+          git fetch --tags origin main
+          
+          # Fetch the list of tags and pick the latest one
+          LATEST_TAG=$(git describe --tags --abbrev=0)
+          
+          if [ -z "$LATEST_TAG" ]; then
+            echo "No tags found. Passing."
+            echo "LATEST_TAG=" >> $GITHUB_ENV
+          else
+            echo "Latest tag: $LATEST_TAG"
+            echo "LATEST_TAG=$LATEST_TAG" >> $GITHUB_ENV
+          fi
+
+      # Step 4: Check if there are changes since the latest release tag
       - name: Check for changes in `main`
         id: check_changes
         run: |
