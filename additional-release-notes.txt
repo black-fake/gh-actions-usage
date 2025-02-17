@@ -5,6 +5,5 @@
 - This version focuses on generating the tag correctly based on the previous tag and the pull request markings (#major, #minor, #patch).
 
 ### Next Steps:
-- create a workflow for creating a release automatically when changes in main are detected
-- test workflow with cron job -> create the release at end of day
-- create a tag automatically for the release
+- test this workflow
+- add these workflows to iSecNG repos
