@@ -26,14 +26,14 @@ jobs:
         id: get_latest_release
         run: |
           # Fetch the latest release tag using git
-          LATEST_TAG=$(git describe --tags `git rev-list --tags --max-count=1`)
+          LATEST_RELEASE_TAG=$(git describe --tags `git rev-list --tags --max-count=1`)
 
-          if [ -z "$LATEST_TAG" ]; then
+          if [ -z "$LATEST_RELEASE_TAG" ]; then
             echo "No previous release tag found, assuming initial release."
             echo "PREVIOUS_TAG_EXISTS=false" >> $GITHUB_ENV
           else
-            echo "Latest release tag: $LATEST_TAG"
-            echo "LATEST_TAG=$LATEST_TAG" >> $GITHUB_ENV
+            echo "Latest release tag: $LATEST_RELEASE_TAG"
+            echo "LATEST_RELEASE_TAG=$LATEST_RELEASE_TAG" >> $GITHUB_ENV
             echo "PREVIOUS_TAG_EXISTS=true" >> $GITHUB_ENV
           fi
 
@@ -51,7 +51,7 @@ jobs:
           git fetch --tags origin main
 
           # Compare the repository since the latest tag to HEAD on the main branch
-          CHANGED_FILES=$(git diff $LATEST_TAG..origin/main --name-only)
+          CHANGED_FILES=$(git diff $LATEST_RELEASE_TAG..origin/main --name-only)
 
           if [ -n "$CHANGED_FILES" ]; then
             echo "Changes detected since the latest release:"
