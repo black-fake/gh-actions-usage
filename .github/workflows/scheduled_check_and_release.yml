@@ -30,18 +30,18 @@ jobs:
 
           if [ -z "$LATEST_RELEASE_TAG" ]; then
             echo "No previous release tag found, assuming initial release."
-            echo "PREVIOUS_TAG_EXISTS=false" >> $GITHUB_ENV
+            echo "PREVIOUS_RELEASE_EXISTS=false" >> $GITHUB_ENV
           else
             echo "Latest release tag: $LATEST_RELEASE_TAG"
             echo "LATEST_RELEASE_TAG=$LATEST_RELEASE_TAG" >> $GITHUB_ENV
-            echo "PREVIOUS_TAG_EXISTS=true" >> $GITHUB_ENV
+            echo "PREVIOUS_RELEASE_EXISTS=true" >> $GITHUB_ENV
           fi
 
       # Step 3: Check if there are changes since the latest release tag
       - name: Check for changes in `main`
         id: check_changes
         run: |
-          if [ "$PREVIOUS_TAG_EXISTS" = "false" ]; then
+          if [ "$PREVIOUS_RELEASE_EXISTS" = "false" ]; then
             echo "No changes detected since no previous release exists."
             echo "RELEASE_NEEDED=true" >> $GITHUB_ENV
             exit 0
