@@ -81,7 +81,27 @@ jobs:
             echo "RELEASE_NEEDED=false" >> $GITHUB_ENV
           fi
 
-      # Step 4: Create a release if changes are found
+            # generate auto-release-notes
+      - name: Generate Release Notes for automatic creation
+        id: generate_auto_release_notes
+        run: |
+          AUTO_RELEASE_NOTES=$(gh api repos/${{ github.repository }}/releases/generate-notes -f tag_name=${{ github.ref_name }} -q ".body")
+          echo "AUTO_RELEASE_NOTES<<EOF" >> $GITHUB_ENV
+          echo "$AUTO_RELEASE_NOTES" >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      # Step 5: Read contents of release-description.txt
+      - name: Read Release Description
+        id: read_release_description
+        run: |
+          RELEASE_NOTES=$(cat release-description.txt)
+          echo "RELEASE_NOTES<<EOF" >> $GITHUB_ENV
+          echo "$RELEASE_NOTES" >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
+
+      # Step 6: Create a release if changes are found
       - name: Create Release
         if: env.RELEASE_NEEDED == 'true'
         uses: actions/create-release@v1.1.4
@@ -89,8 +109,7 @@ jobs:
           tag_name: ${{ env.LATEST_TAG }} # Incremental release tag
           release_name: ${{ env.LATEST_TAG }}
           body: |
-            This release contains the following changes since the last release:
-            $(cat changes.txt)
+            "${{ env.AUTO_RELEASE_NOTES }}\n\n${{ env.RELEASE_NOTES }}"
           prerelease: false
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
