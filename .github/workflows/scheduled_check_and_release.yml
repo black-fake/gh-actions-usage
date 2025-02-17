@@ -4,6 +4,7 @@ on:
   schedule:
     # Run the workflow every 5 minutes
     - cron: '*/5 * * * *'
+  workflow_dispatch:
 
 permissions:
   contents: write  # Required to interact with the repository
@@ -26,32 +27,50 @@ jobs:
         id: get_latest_release
         run: |
           # Fetch the latest release tag using git
-          LATEST_TAG=$(git describe --tags `git rev-list --tags --max-count=1`)
+          LATEST_RELEASE_TAG=$(git describe --tags `git rev-list --tags --max-count=1`)
 
-          if [ -z "$LATEST_TAG" ]; then
+          if [ -z "$LATEST_RELEASE_TAG" ]; then
             echo "No previous release tag found, assuming initial release."
-            echo "PREVIOUS_TAG_EXISTS=false" >> $GITHUB_ENV
+            echo "PREVIOUS_RELEASE_EXISTS=false" >> $GITHUB_ENV
           else
-            echo "Latest release tag: $LATEST_TAG"
-            echo "LATEST_TAG=$LATEST_TAG" >> $GITHUB_ENV
-            echo "PREVIOUS_TAG_EXISTS=true" >> $GITHUB_ENV
+            echo "Latest release tag: $LATEST_RELEASE_TAG"
+            echo "LATEST_RELEASE_TAG=$LATEST_RELEASE_TAG" >> $GITHUB_ENV
+            echo "PREVIOUS_RELEASE_EXISTS=true" >> $GITHUB_ENV
           fi
 
-      # Step 3: Check if there are changes since the latest release tag
+      # Step 3: Get the latest (non-release) tag
+      - name: Get latest tag
+        id: get_latest_tag
+        run: |
+          # Fetch the origin/main branch with its tags
+          git fetch --tags origin main
+          
+          # Fetch the list of tags and pick the latest one
+          LATEST_TAG=$(git describe --tags --abbrev=0)
+          
+          if [ -z "$LATEST_TAG" ]; then
+            echo "No tags found. Passing."
+            echo "LATEST_TAG=" >> $GITHUB_ENV
+          else
+            echo "Latest tag: $LATEST_TAG"
+            echo "LATEST_TAG=$LATEST_TAG" >> $GITHUB_ENV
+          fi
+
+      # Step 4: Check if there are changes since the latest release tag
       - name: Check for changes in `main`
         id: check_changes
         run: |
-          if [ "$PREVIOUS_TAG_EXISTS" = "false" ]; then
+          if [ "$PREVIOUS_RELEASE_EXISTS" = "false" ]; then
             echo "No changes detected since no previous release exists."
             echo "RELEASE_NEEDED=true" >> $GITHUB_ENV
             exit 0
           fi
 
           # Fetch the origin/main branch to ensure it's in sync
-          git fetch origin main
+          git fetch --tags origin main
 
           # Compare the repository since the latest tag to HEAD on the main branch
-          CHANGED_FILES=$(git diff $LATEST_TAG..origin/main --name-only)
+          CHANGED_FILES=$(git diff $LATEST_RELEASE_TAG..origin/main --name-only)
 
           if [ -n "$CHANGED_FILES" ]; then
             echo "Changes detected since the latest release:"
@@ -63,16 +82,35 @@ jobs:
             echo "RELEASE_NEEDED=false" >> $GITHUB_ENV
           fi
 
-#      # Step 4: Create a release if changes are found
-#      - name: Create Release
-#        if: env.RELEASE_NEEDED == 'true'
-#        uses: actions/create-release@v1.1.4
-#        with:
-#          tag_name: v${{ github.run_number }} # Incremental release tag
-#          release_name: Release v${{ github.run_number }}
-#          body: |
-#            This release contains the following changes since the last release:
-#            $(cat changes.txt)
-#          prerelease: false
-#        env:
-#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+            # generate auto-release-notes
+      - name: Generate Release Notes for automatic creation
+        id: generate_auto_release_notes
+        run: |
+          AUTO_RELEASE_NOTES=$(gh api repos/${{ github.repository }}/releases/generate-notes -f tag_name=${{ github.ref_name }} -q ".body")
+          echo "AUTO_RELEASE_NOTES<<EOF" >> $GITHUB_ENV
+          echo "$AUTO_RELEASE_NOTES" >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      # Step 5: Read contents of additional-release-notes.txt
+      - name: Read Release Description
+        id: read_release_description
+        run: |
+          RELEASE_NOTES=$(cat additional-release-notes.txt)
+          echo "RELEASE_NOTES<<EOF" >> $GITHUB_ENV
+          echo "$RELEASE_NOTES" >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
+
+      # Step 6: Create a release if changes are found
+      - name: Create Release
+        if: env.RELEASE_NEEDED == 'true'
+        uses: actions/create-release@v1.1.4
+        with:
+          tag_name: ${{ env.LATEST_TAG }} # Incremental release tag
+          release_name: Release ${{ env.LATEST_TAG }}
+          body: |
+            "${{ env.AUTO_RELEASE_NOTES }}\n\n${{ env.RELEASE_NOTES }}"
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
