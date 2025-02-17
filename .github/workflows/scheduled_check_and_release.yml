@@ -81,16 +81,16 @@ jobs:
             echo "RELEASE_NEEDED=false" >> $GITHUB_ENV
           fi
 
-#      # Step 4: Create a release if changes are found
-#      - name: Create Release
-#        if: env.RELEASE_NEEDED == 'true'
-#        uses: actions/create-release@v1.1.4
-#        with:
-#          tag_name: v${{ github.run_number }} # Incremental release tag
-#          release_name: Release v${{ github.run_number }}
-#          body: |
-#            This release contains the following changes since the last release:
-#            $(cat changes.txt)
-#          prerelease: false
-#        env:
-#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      # Step 4: Create a release if changes are found
+      - name: Create Release
+        if: env.RELEASE_NEEDED == 'true'
+        uses: actions/create-release@v1.1.4
+        with:
+          tag_name: ${{ env.LATEST_TAG }} # Incremental release tag
+          release_name: ${{ env.LATEST_TAG }}
+          body: |
+            This release contains the following changes since the last release:
+            $(cat changes.txt)
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
