@@ -23,6 +23,8 @@ jobs:
       # Step 2: Get the latest release tag
       - name: Get Latest Release Tag
         id: get_latest_release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           LATEST_TAG=$(gh release list --limit 1 --json tagName --jq '.[0].tagName'  || echo "v0.0.0")
           echo "LATEST_TAG=${LATEST_TAG}" >> $GITHUB_ENV
