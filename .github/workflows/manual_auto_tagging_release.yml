@@ -69,8 +69,10 @@ jobs:
             BUMP_TYPE="major"
           elif echo "${{ env.PRS }}" | grep -q "#minor"; then
             BUMP_TYPE="minor"
-          else
+          elif echo "${{ env.PRS }}" | grep -q "#patch"; then
             BUMP_TYPE="patch"
+          else
+            BUMP_TYPE="fist_bump_in_the_face"
           fi
           set +x
 
@@ -99,8 +101,16 @@ jobs:
           elif [ "$INPUT_BUMP" = "minor" ]; then
             MINOR=$((MINOR + 1))
             PATCH=0
-          else
+          elif [ "$INPUT_BUMP" = "patch" ]; then
             PATCH=$((PATCH + 1))
+          elif [ "$INPUT_BUMP" = "fist_bump_in_the_face" ]
+            echo "👊 You're getting a virtual punch in the face! Why?" >&2
+            echo "Because you didn't use proper tags like #major, #minor, or #patch in your Pull Request titles." >&2
+            echo "Fix your PR tags and try again!" >&2
+            exit 1  
+          else
+            echo "💥 Unexpected error: Invalid bump type '$INPUT_BUMP'." >&2
+            exit 1
           fi
 
           NEW_VERSION="v${MAJOR}.${MINOR}.${PATCH}"
