@@ -27,7 +27,7 @@ jobs:
         id: get_latest_release
         run: |
           # Fetch the latest release tag using git
-          LATEST_RELEASE_TAG=$(git describe --tags `git rev-list --tags --max-count=1`)
+          LATEST_RELEASE_TAG=$(gh release list --limit 1 --json tagName --jq '.[0].tagName')
 
           if [ -z "$LATEST_RELEASE_TAG" ]; then
             echo "No previous release tag found, assuming initial release."
