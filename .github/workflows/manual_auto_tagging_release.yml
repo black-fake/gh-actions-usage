@@ -49,7 +49,7 @@ jobs:
           PRS=$(gh api -H "Authorization: Bearer $GITHUB_TOKEN"  /repos/$REPO/commits/$COMMIT/pulls --jq '.[].title')
           echo "Merged PRs: $PRS"
           echo "PRS<<EOF" >> $GITHUB_ENV
-          echo "$PRS" >> $GITHUB_ENV
+          echo "$PRS" | sed 's~"~\\"~g' >> $GITHUB_ENV
           echo "EOF" >> $GITHUB_ENV
           set -x
 
@@ -65,11 +65,11 @@ jobs:
 
           set -x
           # Check for #major, #minor, or #patch in PR titles and determine the highest bump
-          if echo "${{ env.PRS }}" | grep -q "#major"; then
+          if echo "${{ env.PRS }}" | grep -qi "#major"; then
             BUMP_TYPE="major"
-          elif echo "${{ env.PRS }}" | grep -q "#minor"; then
+          elif echo "${{ env.PRS }}" | grep -qi "#minor"; then
             BUMP_TYPE="minor"
-          elif echo "${{ env.PRS }}" | grep -q "#patch"; then
+          elif echo "${{ env.PRS }}" | grep -qi "#patch"; then
             BUMP_TYPE="patch"
           else
             BUMP_TYPE="fist_bump_in_the_face"
