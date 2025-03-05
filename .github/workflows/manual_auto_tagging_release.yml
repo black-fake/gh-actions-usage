@@ -1,4 +1,4 @@
-name: Manual Auto Tagging Release
+name: Create new Tag for next release
 
 permissions:
   contents: write
