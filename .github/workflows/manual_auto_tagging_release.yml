@@ -76,7 +76,7 @@ jobs:
           fi
           set +x
 
-          echo "Determined Bump Type: $BUMP_TYPE"
+          echo "Determined Bump Type: '$BUMP_TYPE'"
           echo "INPUT_BUMP=$BUMP_TYPE" >> $GITHUB_ENV
 
       # Step 5: Determine next semantic version
