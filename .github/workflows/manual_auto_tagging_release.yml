@@ -49,7 +49,7 @@ jobs:
           PRS=$(gh api -H "Authorization: Bearer $GITHUB_TOKEN"  /repos/$REPO/commits/$COMMIT/pulls --jq '.[].title')
           echo "Merged PRs: $PRS"
           echo "PRS<<EOF" >> $GITHUB_ENV
-          echo "$PRS" | sed 's~"~\\"~g' >> $GITHUB_ENV
+          echo "$PRS" | sed 's~"~\\"~g;s~'~\\'~g' >> $GITHUB_ENV
           echo "EOF" >> $GITHUB_ENV
           set -x
 
