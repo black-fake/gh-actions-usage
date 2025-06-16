@@ -1,0 +1,32 @@
+name: run_yaml2bpmn_converter.yml
+on:
+  push:
+    branches:
+      - staging
+    paths:
+      - "playbooks/malware_new/*/*.yml"
+  workflow_dispatch:
+
+
+jobs:
+  run-yaml2bpmn-converter:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1: Checkout repository
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      # Step 2: Set up Python environment
+      - name: Set up Python 3
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+
+      # Step 3: Run the script
+      - name: Run Python script
+        run: |
+          python -m venv venv
+          source venv/bin/activate
+          pip install -r parser/requirements.txt
+          python parser/yaml_combine/main.py
