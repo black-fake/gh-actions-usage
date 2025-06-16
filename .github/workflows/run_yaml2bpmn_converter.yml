@@ -34,10 +34,17 @@ jobs:
           pip install -r parser/requirements.txt
           cd parser/yaml_combine
           python main.py
+          echo 'current directory:'
           pwd
+          echo 'ls -R:'
           ls -R
 
       # Step 4:
+      - name: Clean up files before PR
+        run: |
+          rm -rf parser/yaml_combine/yaml2bpmn_converter/__pycache__/
+          rm -f parser/yaml_combine/yaml_combiner.log
+
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v6
         with:
