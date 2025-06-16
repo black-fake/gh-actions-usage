@@ -31,3 +31,11 @@ jobs:
           pip install -r parser/requirements.txt
           cd parser/yaml_combine
           python main.py
+          ls -R parser/yaml_combine/output
+
+      # Step 4:
+      - name: upload generated files
+        uses: actions/upload-artifact@v4
+        with:
+          name: bpmn-files
+          path: parser/yaml_combine/output/bpmn/*.bpmn
