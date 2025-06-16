@@ -31,7 +31,7 @@ jobs:
           pip install -r parser/requirements.txt
           cd parser/yaml_combine
           python main.py
-          ls -R parser/yaml_combine/output
+          ls -R
 
       # Step 4:
       - name: upload generated files
