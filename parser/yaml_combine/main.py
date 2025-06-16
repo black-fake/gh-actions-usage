@@ -239,4 +239,4 @@ if __name__ == '__main__':
                 with open(os.path.join(BPMN_OUTPUT_DIRECTORY, playbook_yaml["process"]+".bpmn"), "w") as f:
                     f.write(bpmn_xml)
                 logger.info("[+] Created BPMN file: \"%s\"", playbook_yaml["process"]+".bpmn")
-                print("created BPMN File: %s", playbook_yaml["process"]+".bpmn")
+                print(f"created BPMN File: {playbook_yaml["process"]+".bpmn"}")
