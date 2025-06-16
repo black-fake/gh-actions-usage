@@ -29,4 +29,5 @@ jobs:
           python -m venv venv
           source venv/bin/activate
           pip install -r parser/requirements.txt
-          python parser/yaml_combine/main.py
+          cd parser/yaml_combine
+          python main.py
