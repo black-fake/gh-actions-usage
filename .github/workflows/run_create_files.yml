@@ -27,8 +27,7 @@ jobs:
       # Step 3: Run the script
       - name: Run Python script
         run: |
-          cd helm/templates
-          python main.py
+          python .github/deployment/create_files.py
           echo 'current directory:'
           pwd
           echo 'ls -R:'
