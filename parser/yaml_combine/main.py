@@ -9,8 +9,8 @@ from yaml2bpmn_converter import yaml_parser, xml_generator
 logger = logging.getLogger(__name__)
 
 START_DIRECTORY = "../../playbooks" # Directory to start searching playbooks
-OUTPUT_DIRECTORY = "./output"       # Output directory, where combined files will be stored
-BPMN_OUTPUT_DIRECTORY = "./output/bpmn"
+OUTPUT_DIRECTORY = "parser/yaml_combine/output"       # Output directory, where combined files will be stored
+BPMN_OUTPUT_DIRECTORY = "parser/yaml_combine/output/bpmn"
 
 activity_counter: int = 0 # Global variable for counting activities (more infos see "add_counter_to_activities" function)
 
