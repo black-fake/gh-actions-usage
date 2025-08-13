@@ -20,10 +20,7 @@ jobs:
       contents: write
 
     env:
-      TARGET_BRANCH: ${{ 
-        github.event.inputs.deployment_target == 'current-branch' && format('{0}-deployment', github.ref_name) ||
-        github.event.inputs.deployment_target
-      }}
+      TARGET_BRANCH: ${{ github.event.inputs.deployment_target == 'current-branch' && format('{0}-deployment', github.ref_name) || github.event.inputs.deployment_target }}
 
     steps:
       - name: Checkout
