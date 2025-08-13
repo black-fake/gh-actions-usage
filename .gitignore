@@ -1,4 +1,0 @@
-.idea
-
-helm/templates/
-helm/templates/*.yaml
