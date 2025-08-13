@@ -1,4 +1,0 @@
-**Release Date:** 2024-02-18
-
-> A tag after a merge to main will be created only if the PR is tagged with one of the following tags: #major, #minor, #patch
-> Otherwise the workflow fails and no tag is created
