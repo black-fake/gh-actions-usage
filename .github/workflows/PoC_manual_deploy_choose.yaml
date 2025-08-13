@@ -1,0 +1,63 @@
+name: PoC Manual Deploy
+
+on:
+  workflow_dispatch:
+    inputs:
+      deployment_target:
+        description: 'Where to deploy'
+        required: true
+        default: 'current-branch'
+        type: choice
+        options:
+        - current-branch
+        - staging-deployment
+        - main-deployment
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    env:
+      TARGET_BRANCH: ${{ 
+        github.event.inputs.deployment_target == 'current-branch' && format('{0}-deployment', github.ref_name) ||
+        github.event.inputs.deployment_target
+      }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Show deployment info
+        run: |
+          echo "Source: ${{ github.ref_name }}"
+          echo "Target: ${{ env.TARGET_BRANCH }}"
+          echo "Choice: ${{ github.event.inputs.deployment_target }}"
+
+      - name: Create deployment files
+        run: |
+          # Create a simple deployment file
+          mkdir -p deploy
+          echo "# Deployed from ${{ github.ref_name }}" > deploy/README.md
+          echo "Timestamp: $(date)" >> deploy/README.md
+
+      - name: Push to deployment branch
+        run: |
+          git config user.name "github-action"
+          git config user.email "action@github.com"
+          
+          # Create/switch to target branch
+          git checkout -B "$TARGET_BRANCH"
+          
+          # Clear everything except .git
+          find . -mindepth 1 -maxdepth 1 ! -name '.git' ! -name 'deploy' -exec rm -rf {} +
+          
+          # Copy deployment files
+          cp -r deploy/* .
+          rm -rf deploy
+          
+          # Commit and push
+          git add .
+          git commit -m "Deploy from ${{ github.ref_name }}" || echo "No changes"
+          git push -f origin "$TARGET_BRANCH"
